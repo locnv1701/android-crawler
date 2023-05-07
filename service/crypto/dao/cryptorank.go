@@ -34,17 +34,16 @@ type CryptorankList struct {
 			X60    string `json:"x60"`
 			X150   string `json:"x150"`
 		} `json:"image"`
-		Tokens                 []interface{} `json:"tokens"`
-		Category               string        `json:"category"`
-		CategoryID             int           `json:"categoryId"`
-		TagIds                 []int         `json:"tagIds"`
-		IsTraded               bool          `json:"isTraded"`
-		MarketDataNotAvailable bool          `json:"marketDataNotAvailable"`
-		FullyDilutedMarketCap  float64       `json:"fullyDilutedMarketCap"`
-		AvailableSupply        int           `json:"availableSupply"`
-		MarketCap              float64       `json:"marketCap"`
-		Volume24H              float64       `json:"volume24h"`
-		NoData                 bool          `json:"noData"`
+		Category               string  `json:"category"`
+		CategoryID             int     `json:"categoryId"`
+		TagIds                 []int   `json:"tagIds"`
+		IsTraded               bool    `json:"isTraded"`
+		MarketDataNotAvailable bool    `json:"marketDataNotAvailable"`
+		FullyDilutedMarketCap  float64 `json:"fullyDilutedMarketCap"`
+		AvailableSupply        int     `json:"availableSupply"`
+		MarketCap              float64 `json:"marketCap"`
+		Volume24H              float64 `json:"volume24h"`
+		NoData                 bool    `json:"noData"`
 		Volatility             struct {
 			USD float64 `json:"USD"`
 			ETH float64 `json:"ETH"`
@@ -107,5 +106,12 @@ type CryptorankList struct {
 			DateETH string  `json:"dateETH"`
 			DateUSD string  `json:"dateUSD"`
 		} `json:"atlPrice"`
+		Tokens []struct {
+			PlatformName string `json:"platformName"`
+			PlatformKey  string `json:"platformKey"`
+			PlatformSlug string `json:"platformSlug"`
+			ExplorerURL  string `json:"explorerUrl"`
+			Address      string `json:"address"`
+		} `json:"tokens"`
 	} `json:"data"`
 }

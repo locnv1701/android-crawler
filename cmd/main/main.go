@@ -14,6 +14,8 @@ import (
 	"base/pkg/server"
 	"base/service/crypto/crawler"
 
+	// "base/service/crypto/crawler"
+
 	"base/service"
 )
 
@@ -38,6 +40,7 @@ func main() {
 	svr.Start()
 
 	crawler.CallApiCryptorank()
+	// crawler.CrawlAssetByZapper()
 
 	sig := make(chan os.Signal, 1)
 	// Notify Any Signal to OS Signal Channel

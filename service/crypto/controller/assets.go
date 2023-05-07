@@ -1,45 +1,32 @@
 package controller
 
 import (
+	"base/pkg/log"
 	"base/pkg/router"
 	"base/service/crypto/dao"
-	"fmt"
 	"net/http"
 )
 
+// type ExplorerAddressDTO struct {
+// 	Address string     `json:"address"`
+// 	Assets  dao.Assets `json:"assets"`
+// }
+
 func GetAssets(w http.ResponseWriter, r *http.Request) {
-	userId := r.URL.Query().Get("userId")
-	if len(userId) <= 0 {
-		router.ResponseBadRequest(w, "B.400", "Missing userId param!")
+	address := r.URL.Query().Get("address")
+	if len(address) <= 0 {
+		router.ResponseBadRequest(w, "B.400", "Missing address param!")
 		return
 	}
 
-	repo := &dao.AssetRepo{
-		UserId: userId,
+	listAsset := dao.Assets{
+		Address: address,
 	}
 
-	err := repo.GetAssets()
+	err := listAsset.GetAllAsset()
 	if err != nil {
-		fmt.Println(err)
+		log.Println(log.LogLevelError, "ExplorerAddress listAsset.GetAllAsset()", err.Error())
 	}
 
-	total := float64(0)
-	for i, asset := range repo.Assets {
-		crypto := &dao.Crypto{
-			Symbol: asset.Symbol,
-		}
-
-		err = crypto.GetDetail()
-		if err != nil {
-			fmt.Println(err)
-		}
-
-		asset.Image = crypto.Image
-		asset.Name = crypto.Name
-		repo.Assets[i] = asset
-
-		total += crypto.PriceUSD * asset.Amount
-	}
-	repo.Total = total
-	router.ResponseSuccessWithData(w, "B.200", "Get assets succeessful", repo)
+	router.ResponseSuccessWithData(w, "B.200", "Get assets succeessful", listAsset)
 }

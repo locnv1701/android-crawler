@@ -15,6 +15,8 @@ type Crypto struct {
 	Key         string  `json:"key"`
 	Name        string  `json:"name"`
 	Symbol      string  `json:"symbol"`
+	Chainname   string  `json:"chainname"`
+	Address     string  `json:"address"`
 	Type        string  `json:"type"`
 	TotalSupply float64 `json:"totalSupply"`
 	Image       string  `json:"image"`
@@ -26,10 +28,10 @@ type Crypto struct {
 }
 
 func (crypto *Crypto) Insert() error {
-	query := `INSERT INTO crypto (id, key, name, symbol, type, totalSupply, image,
-		marketcap, volume24h, priceUSD, createddate, updateddate) values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)`
+	query := `INSERT INTO crypto (id, key, name, symbol, chainname, address, type, totalSupply, image,
+		marketcap, volume24h, priceUSD, createddate, updateddate) values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)`
 
-	_, err := db.PSQL.Exec(query, crypto.Id, crypto.Key, crypto.Name, crypto.Symbol, crypto.Type, crypto.TotalSupply, crypto.Image,
+	_, err := db.PSQL.Exec(query, crypto.Id, crypto.Key, crypto.Name, crypto.Symbol, crypto.Chainname, crypto.Address, crypto.Type, crypto.TotalSupply, crypto.Image,
 		crypto.MarketCap, crypto.Volume24H, crypto.PriceUSD, utils.Timestamp(), utils.Timestamp())
 
 	return err
@@ -57,7 +59,7 @@ func (repo *CryptoRepo) GetCryptos() error {
 		crypto := &Crypto{}
 		err := rows.Scan(&crypto.Id, &crypto.Name, &crypto.Symbol, &crypto.Type, &crypto.TotalSupply,
 			&crypto.Image, &crypto.MarketCap, &crypto.Volume24H, &crypto.PriceUSD)
-			fmt.Println("select des from crypto where ")
+		fmt.Println("select des from crypto where ")
 		if err != nil {
 			return err
 		}

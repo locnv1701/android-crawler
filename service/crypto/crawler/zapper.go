@@ -15,28 +15,78 @@ import (
 	"time"
 )
 
+func CrawlAssetByZapper() {
+	addresses := []string{
+		"0xfe5fb84cfe723f6c809e4a0e02212e955217e2b0",
+		"0x2ce41ec427664971608ee87397e06e88bbe36a47",
+		"0x1fb0b7f567d4bff19b3b3ba22538ed7b0934cbe2",
+		"0x764b0adfa038721cf27b15e2eb94c22341fe5a2d",
+		"0x602dbf79e0c4f8e90bb97bdd0a2f068b59924f4d",
+		"0xf59c58337f66438de81570d8f76bfc67aa0788a5",
+		"0xb7240af2af90b33c08ae9764103e35dce3638428",
+		"0x8e9227f1d526d03789f8c09c2b5944eb53e6d5ec",
+		"0x4a16ecf42d72528264b8313b604493eafef5d845",
+		"0xcc6fcfb8b3988043e382a481d6bf482d68897024",
+		"0x13288f3f4d784377a1d94eea529e5955c57a54e5",
+		"0x04d9cc35d5bf408a7d442fb45d235667144e4d92",
+		"0xa178ff321335bb777a7e21a56376592f69556b9c",
+		"0xca8d6f69d8f32516a109df68b623452cc9f5e64d",
+		"0x55152e90293b52ed08f4cdc9b60aa4ebefa3c635",
+		"0x525fc5d4fca3bac67b150cd7821816dccf4471b7",
+		"0x0bd95534c6d270d3f867f17958a67a3f89d84104",
+		"0x301407427168fb51bcc927b9fb76dcd88fe45681",
+		"0x985124fa22125fcd4480876c1e8191167f4efcb4",
+		"0x856442d44ffde0fc090e7a4d1b92c9dac57af4b7",
+		"0xc92d500dcbe98df16a0906248a031cca80676593",
+		"0xaab72305897ddf54ef56040e9181f29c668f1c6e",
+		"0x92f3da97f4a17708233452e6a66cde76a80a1938",
+		"0x7422f5f528cc36ea48f6cd8cda5a9816e4573ede",
+		"0x21e90dc3a909c72aaf97678dbb063fbbc32aef0c",
+		"0x42c09c68d5edf5ddf89175bcb9d6847d3dfb6669",
+		"0xfe3348559721ba6801accd438c9576b1513e7c52",
+		"0xfcba81c19b20d2f2d7cea6e10647803ede7697c0",
+		"0x0fc19b69f40373c2abd10eeb37952c1197a3302e",
+		"0x453a1313270865a7cb0acd21e31db44f1a64e908",
+		"0x72c2a6ab872b51ec6e1d4314febf8f55587bbff5",
+		"0x6dd5a9f47cfbc44c04a0a4452f0ba792ebfbcc9a",
+		"0xd225a255ab6fa11b9673ad0516b579f4cdbaffe5",
+		"0xb2698c2d99ad2c302a95a8db26b08d17a77cedd4",
+		"0xb4d1fa72c69099c554848de5be2735da315678c3",
+		"0x6edf7f5283725c953ee64317f66188af1184b033",
+		"0x7153d2ef9f14a6b1bb2ed822745f65e58d836c3f",
+		"0xe5968797468ef767101b761d431fce14abffdbb4",
+		"0xc2a39291acf6ae4ed29c6fcc15f1d54141f8d833",
+		"0x16a0772b17ae004e6645e0e95bf50ad69498a34e",
+		"0x1dfbbb649e4c89fd8354f01303ccd668957ce9bf",
+		"0xb7330c1290ac1e8cbdcf60f82b423216e53742f7",
+		"0x69ab22c316c32eb03494f6998be36bdc2379f87a",
+		"0xf52284a180d11257a87d528009c12d59ff109a52",
+		"0x382591e7217b435e8e884cdbf415fe377a6fe29e",
+		"0x3113b42b97de26116b2957288ea94120d5c3e84b",
+		"0x550d74e4f43d447ba104662f44bdb47036c0d2c9",
+		"0xd07957a1183d956e804fb125c70f777ccffcb140",
+	}
+
+	for _, address := range addresses {
+		assets, err := CallZapperNewAddress(address)
+		if err != nil {
+			fmt.Println(err)
+		}
+		fmt.Println(assets)
+		err = assets.InsertListAsset()
+		if err != nil {
+			fmt.Println(err)
+		}
+	}
+
+}
+
 func CallZapperNewAddress(address string) (dao.Assets, error) {
 	assets := dao.Assets{
 		Address: address,
 	}
 
-	response, err := http.Get("https://zapper.xyz")
-	if err != nil {
-		log.Println(log.LogLevelError, "http.Get https://zapper.xyz", err.Error())
-	}
-
-	defer response.Body.Close()
-
-	cookie := http.Cookie{}
-
-	for _, ele := range response.Cookies() {
-		// fmt.Printf("Name: %s\n", ele.Name)
-		// fmt.Printf("Value: %s\n", ele.Value)
-		cookie.Name = ele.Name
-		cookie.Value = ele.Value
-	}
-
-	err = CallZapperPostAddress(address, cookie)
+	err := CallZapperPostAddress(address)
 	if err != nil {
 		log.Println(log.LogLevelError, "CallZapperNewAddress CallZapperPostAddress", err.Error())
 	}
@@ -44,7 +94,7 @@ func CallZapperNewAddress(address string) (dao.Assets, error) {
 	//todo: wait for the job to run after 10s
 	time.Sleep(10 * time.Second)
 
-	assets, err = CallZapperGetAssets(address, cookie)
+	assets, err = CallZapperGetAssets(address)
 	if err != nil {
 		log.Println(log.LogLevelError, "CallZapperNewAddress CallZapperGetAssets", err.Error())
 	}
@@ -52,7 +102,7 @@ func CallZapperNewAddress(address string) (dao.Assets, error) {
 	return assets, nil
 }
 
-func CallZapperPostAddress(address string, cookie http.Cookie) error {
+func CallZapperPostAddress(address string) error {
 	request, err := http.NewRequest("POST", `https://zapper.xyz/z/v2/balances/tokens?addresses[]=`+address+`&networks[]=ethereum&networks[]=polygon&networks[]=optimism&networks[]=gnosis&networks[]=binance-smart-chain&networks[]=fantom&networks[]=avalanche&networks[]=arbitrum&networks[]=celo&networks[]=moonriver&networks[]=bitcoin&networks[]=aurora`, nil)
 
 	request.Header.Add("user-agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36")
@@ -68,8 +118,6 @@ func CallZapperPostAddress(address string, cookie http.Cookie) error {
 	request.Header.Add("sec-fetch-site", "none")
 	request.Header.Add("sec-fetch-user", "?1")
 	request.Header.Add("upgrade-insecure-requests", "1")
-
-	request.AddCookie(&cookie)
 
 	if err != nil {
 		return err
@@ -98,7 +146,7 @@ func CallZapperPostAddress(address string, cookie http.Cookie) error {
 	return nil
 }
 
-func CallZapperGetAssets(address string, cookie http.Cookie) (dao.Assets, error) {
+func CallZapperGetAssets(address string) (dao.Assets, error) {
 	assets := dao.Assets{
 		Address: address,
 	}
@@ -120,8 +168,6 @@ func CallZapperGetAssets(address string, cookie http.Cookie) (dao.Assets, error)
 	request.Header.Add("sec-fetch-user", "?1")
 	request.Header.Add("upgrade-insecure-requests", "1")
 	request.Header.Add("user-agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36")
-
-	request.AddCookie(&cookie)
 
 	if err != nil {
 		return assets, err
@@ -191,9 +237,6 @@ func CallZapperGetAssets(address string, cookie http.Cookie) (dao.Assets, error)
 			ChainName:    balance.Network,
 			Amount:       balance.Token.BalanceRaw,
 		}
-
-		decimalString := fmt.Sprintf("%d", balance.Token.Decimals)
-		asset.TokenDecimal = &decimalString
 
 		priceString := fmt.Sprintf("%f", *balance.Token.Price)
 		asset.TokenPriceUSD = &priceString

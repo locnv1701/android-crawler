@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strings"
 )
 
 func CallApiCryptorank() {
@@ -26,10 +27,13 @@ func CallApiCryptorank() {
 	cryptorankList := dao.CryptorankList{}
 
 	err = json.Unmarshal(body, &cryptorankList)
+	if err != nil {
+		fmt.Println(err)
+	}
 
-	// fmt.Println("len", len(cryptorankList.Data))
+	fmt.Println("len", len(cryptorankList.Data))
 
-	for _, cryptorank := range cryptorankList.Data[:100] {
+	for _, cryptorank := range cryptorankList.Data[:1000] {
 		crypto := dao.Crypto{
 			Id:          cryptorank.Rank,
 			Key:         cryptorank.Key,
@@ -43,6 +47,17 @@ func CallApiCryptorank() {
 			PriceUSD:    cryptorank.Price.USD,
 		}
 
+		if crypto.Type == "coin" {
+			crypto.Chainname = strings.ToLower(cryptorank.Name)
+			crypto.Address = "0x0000000000000000000000000000000000000000"
+		} else {
+			if len(cryptorank.Tokens) != 0 {
+				crypto.Chainname = strings.ToLower(cryptorank.Tokens[0].PlatformName)
+				crypto.Address = cryptorank.Tokens[0].Address
+			}
+		}
+
+		//todo: update or insert
 		err := crypto.Update()
 
 		if err != nil {
