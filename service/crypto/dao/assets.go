@@ -21,6 +21,13 @@ type Asset struct {
 	Amount        *string `json:"amount"`
 }
 
+func (assets *Assets) CheckExist() (int, error) {
+	query := `select count(*) from assets where address = $1`
+	count := 0
+	err := db.PSQL.QueryRow(query, assets.Address).Scan(&count)
+	return count, err
+}
+
 func (assets *Assets) GetAllAsset() error {
 	query := `select crypto.address, crypto.name, crypto.symbol, crypto.image, crypto.priceUSD,
 	wallet_assets.chainname, wallet_assets.amount from crypto join 

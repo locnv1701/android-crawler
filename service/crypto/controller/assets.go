@@ -3,7 +3,9 @@ package controller
 import (
 	"base/pkg/log"
 	"base/pkg/router"
+	"base/service/crypto/crawler"
 	"base/service/crypto/dao"
+	"fmt"
 	"net/http"
 )
 
@@ -23,7 +25,25 @@ func GetAssets(w http.ResponseWriter, r *http.Request) {
 		Address: address,
 	}
 
-	err := listAsset.GetAllAsset()
+	count, err := listAsset.CheckExist()
+	if err != nil {
+		log.Println(log.LogLevelError, "check", err.Error())
+	}
+
+	if count == 0 {
+		fmt.Println("new address")
+		assets, err := crawler.CallZapperNewAddress(address)
+		if err != nil {
+			fmt.Println(err)
+		}
+		fmt.Println(assets)
+		err = assets.InsertListAsset()
+		if err != nil {
+			fmt.Println(err)
+		}
+	}
+
+	err = listAsset.GetAllAsset()
 	if err != nil {
 		log.Println(log.LogLevelError, "ExplorerAddress listAsset.GetAllAsset()", err.Error())
 	}
