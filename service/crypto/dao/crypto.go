@@ -3,6 +3,7 @@ package dao
 import (
 	"base/pkg/db"
 	"base/pkg/utils"
+	"fmt"
 )
 
 type CryptoRepo struct {
@@ -45,7 +46,7 @@ func (crypto *Crypto) Update() error {
 
 func (repo *CryptoRepo) GetCryptos() error {
 	query := `SELECT id, "name", symbol, "type", totalsupply, 
-	image, marketcap, volume24h, priceusd FROM public.crypto order by marketCap desc limit 100;`
+	image, marketcap, volume24h, priceusd FROM public.crypto order by marketCap desc;`
 	rows, err := db.PSQL.Query(query)
 	if err != nil {
 		return err
@@ -56,6 +57,7 @@ func (repo *CryptoRepo) GetCryptos() error {
 		crypto := &Crypto{}
 		err := rows.Scan(&crypto.Id, &crypto.Name, &crypto.Symbol, &crypto.Type, &crypto.TotalSupply,
 			&crypto.Image, &crypto.MarketCap, &crypto.Volume24H, &crypto.PriceUSD)
+			fmt.Println("select des from crypto where ")
 		if err != nil {
 			return err
 		}
