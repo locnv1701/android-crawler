@@ -5,13 +5,17 @@ import (
 	"base/pkg/utils"
 )
 
+type CryptoRepo struct {
+	Cryptos []Crypto `json:"cryptos"`
+}
+
 type Crypto struct {
-	Id          int     `json:"rank"`
+	Id          int     `json:"id"`
 	Key         string  `json:"key"`
 	Name        string  `json:"name"`
 	Symbol      string  `json:"symbol"`
 	Type        string  `json:"type"`
-	TotalSupply int     `json:"totalSupply"`
+	TotalSupply float64 `json:"totalSupply"`
 	Image       string  `json:"image"`
 	MarketCap   float64 `json:"marketCap"`
 	Volume24H   float64 `json:"volume24h"`
@@ -29,4 +33,45 @@ func (crypto *Crypto) Insert() error {
 
 	return err
 }
- 
+
+func (crypto *Crypto) Update() error {
+	query := `UPDATE public.crypto SET totalsupply = $1, marketcap = $2, volume24h = $3, priceusd = $4 where key = $5;`
+	_, err := db.PSQL.Exec(query, crypto.TotalSupply, crypto.MarketCap, crypto.Volume24H, crypto.PriceUSD, crypto.Key)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (repo *CryptoRepo) GetCryptos() error {
+	query := `SELECT id, "name", symbol, "type", totalsupply, 
+	image, marketcap, volume24h, priceusd FROM public.crypto order by marketCap desc limit 100;`
+	rows, err := db.PSQL.Query(query)
+	if err != nil {
+		return err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		crypto := &Crypto{}
+		err := rows.Scan(&crypto.Id, &crypto.Name, &crypto.Symbol, &crypto.Type, &crypto.TotalSupply,
+			&crypto.Image, &crypto.MarketCap, &crypto.Volume24H, &crypto.PriceUSD)
+		if err != nil {
+			return err
+		}
+		repo.Cryptos = append(repo.Cryptos, *crypto)
+	}
+	return nil
+}
+
+func (crypto *Crypto) GetDetail() error {
+	query := `SELECT id, "name", symbol, "type", totalsupply, 
+	image, marketcap, volume24h, priceusd FROM public.crypto where symbol = $1;`
+	err := db.PSQL.QueryRow(query, crypto.Symbol).Scan(
+		&crypto.Id, &crypto.Name, &crypto.Symbol, &crypto.Type, &crypto.TotalSupply,
+		&crypto.Image, &crypto.MarketCap, &crypto.Volume24H, &crypto.PriceUSD)
+	if err != nil {
+		return err
+	}
+	return nil
+}

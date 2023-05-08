@@ -27,7 +27,7 @@ func CallApiCryptorank() {
 
 	err = json.Unmarshal(body, &cryptorankList)
 
-	fmt.Println("len", len(cryptorankList.Data))
+	// fmt.Println("len", len(cryptorankList.Data))
 
 	for _, cryptorank := range cryptorankList.Data[:100] {
 		crypto := dao.Crypto{
@@ -43,12 +43,10 @@ func CallApiCryptorank() {
 			PriceUSD:    cryptorank.Price.USD,
 		}
 
-		err := crypto.Insert()
+		err := crypto.Update()
 
 		if err != nil {
 			fmt.Println("err insert", err)
 		}
 	}
-
-	fmt.Println(err)
 }

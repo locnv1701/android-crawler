@@ -24,10 +24,10 @@ type CryptorankList struct {
 			USD     float64 `json:"USD"`
 			DateUSD string  `json:"dateUSD"`
 		} `json:"athMarketCap"`
-		LifeCycle       string `json:"lifeCycle"`
-		MaxSupply       int    `json:"maxSupply"`
-		UnlimitedSupply bool   `json:"unlimitedSupply"`
-		TotalSupply     int    `json:"totalSupply"`
+		LifeCycle       string  `json:"lifeCycle"`
+		MaxSupply       int     `json:"maxSupply"`
+		UnlimitedSupply bool    `json:"unlimitedSupply"`
+		TotalSupply     float64 `json:"totalSupply"`
 		Image           struct {
 			Native string `json:"native"`
 			Icon   string `json:"icon"`
