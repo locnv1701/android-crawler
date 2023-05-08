@@ -7,15 +7,6 @@ import (
 	"net/http"
 )
 
-func AddAsset(w http.ResponseWriter, r *http.Request) {
-	asset := &dao.Asset{}
-	err := asset.AddAsset()
-	if err != nil {
-		fmt.Println(err)
-	}
-	router.ResponseSuccess(w, "B.200", "Add assets succeessful")
-}
-
 func GetAssets(w http.ResponseWriter, r *http.Request) {
 	userId := r.URL.Query().Get("userId")
 	if len(userId) <= 0 {
@@ -51,13 +42,4 @@ func GetAssets(w http.ResponseWriter, r *http.Request) {
 	}
 	repo.Total = total
 	router.ResponseSuccessWithData(w, "B.200", "Get assets succeessful", repo)
-}
-
-func UpdateAmount(w http.ResponseWriter, r *http.Request) {
-	asset := &dao.Asset{}
-	err := asset.Update()
-	if err != nil {
-		fmt.Println(err)
-	}
-	router.ResponseSuccess(w, "B.200", "Update assets succeessful")
 }
