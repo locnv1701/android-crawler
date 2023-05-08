@@ -6,7 +6,9 @@ import (
 	"base/service/crypto/crawler"
 	"base/service/crypto/dao"
 	"fmt"
+	"math/big"
 	"net/http"
+	"strconv"
 )
 
 // type ExplorerAddressDTO struct {
@@ -47,6 +49,32 @@ func GetAssets(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println(log.LogLevelError, "ExplorerAddress listAsset.GetAllAsset()", err.Error())
 	}
+
+	var total float64
+	for _, asset := range listAsset.Assets {
+
+		amountInt := new(big.Int)
+		amountInt.SetString(*asset.Amount, 10)
+
+		// Tạo big.Int với giá trị bằng 10^18
+		divisor := new(big.Int)
+		divisor.Exp(big.NewInt(10), big.NewInt(18), nil)
+
+		// Chia số num cho 10^18
+		amountInt.Div(amountInt, divisor)
+
+		// In kết quả
+		fmt.Println(amountInt.String())
+
+		priceInt, err := strconv.ParseFloat(*asset.TokenPriceUSD, 10)
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		total += float64(amountInt.Int64()) * priceInt
+	}
+
+	listAsset.Total = total
 
 	router.ResponseSuccessWithData(w, "B.200", "Get assets succeessful", listAsset)
 }

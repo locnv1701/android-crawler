@@ -8,6 +8,7 @@ import (
 type Assets struct {
 	Address string   `json:"address"`
 	Assets  []*Asset `json:"assets"`
+	Total   float64  `json:"total"`
 }
 
 type Asset struct {
