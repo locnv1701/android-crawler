@@ -26,6 +26,7 @@ func init() {
 
 	CryptosService.Group(func(r chi.Router) {
 		CryptosService.Get("/list", controller.GetListCryptos)
+		CryptosService.Get("/detail", controller.GetDetail)
 
 		CryptosService.Get("/assets", controller.GetAssets)
 	})

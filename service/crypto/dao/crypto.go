@@ -21,6 +21,7 @@ type Crypto struct {
 	TotalSupply float64 `json:"totalSupply"`
 	Image       string  `json:"image"`
 	MarketCap   float64 `json:"marketCap"`
+	Des         string  `json:"des"`
 	Volume24H   float64 `json:"volume24h"`
 	PriceUSD    float64 `json:"priceUSD"`
 	CreatedDate string  `json:"createdDate"`
@@ -47,8 +48,7 @@ func (crypto *Crypto) Update() error {
 }
 
 func (repo *CryptoRepo) GetCryptos() error {
-	query := `SELECT id, "name", symbol, "type", totalsupply, 
-	image, marketcap, volume24h, priceusd FROM public.crypto order by marketCap desc;`
+	query := `SELECT id, "name", image, symbol, priceusd FROM public.crypto order by marketCap desc;`
 	rows, err := db.PSQL.Query(query)
 	if err != nil {
 		return err
@@ -57,8 +57,7 @@ func (repo *CryptoRepo) GetCryptos() error {
 
 	for rows.Next() {
 		crypto := &Crypto{}
-		err := rows.Scan(&crypto.Id, &crypto.Name, &crypto.Symbol, &crypto.Type, &crypto.TotalSupply,
-			&crypto.Image, &crypto.MarketCap, &crypto.Volume24H, &crypto.PriceUSD)
+		err := rows.Scan(&crypto.Id, &crypto.Name, &crypto.Symbol, &crypto.PriceUSD)
 		fmt.Println("select des from crypto where ")
 		if err != nil {
 			return err
@@ -70,10 +69,10 @@ func (repo *CryptoRepo) GetCryptos() error {
 
 func (crypto *Crypto) GetDetail() error {
 	query := `SELECT id, "name", symbol, "type", totalsupply, 
-	image, marketcap, volume24h, priceusd FROM public.crypto where symbol = $1;`
-	err := db.PSQL.QueryRow(query, crypto.Symbol).Scan(
+	image, marketcap, volume24h, priceusd, des FROM public.crypto where id = $1;`
+	err := db.PSQL.QueryRow(query, crypto.Id).Scan(
 		&crypto.Id, &crypto.Name, &crypto.Symbol, &crypto.Type, &crypto.TotalSupply,
-		&crypto.Image, &crypto.MarketCap, &crypto.Volume24H, &crypto.PriceUSD)
+		&crypto.Image, &crypto.MarketCap, &crypto.Volume24H, &crypto.PriceUSD, &crypto.Des)
 	if err != nil {
 		return err
 	}

@@ -32,8 +32,7 @@ func (assets *Assets) GetAllAsset() error {
 	query := `select crypto.address, crypto.name, crypto.symbol, crypto.image, crypto.priceUSD,
 	wallet_assets.chainname, wallet_assets.amount from crypto join 
 	(select tokenaddress, chainname, amount from assets where address = $1) as wallet_assets
-	on crypto.chainname = wallet_assets.chainname and crypto.address = wallet_assets.tokenaddress
-	`
+	on crypto.chainname = wallet_assets.chainname and crypto.address = wallet_assets.tokenaddress;`
 
 	rows, err := db.PSQL.Query(query, assets.Address)
 	if err != nil {
