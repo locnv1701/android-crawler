@@ -3,7 +3,6 @@ package dao
 import (
 	"base/pkg/db"
 	"base/pkg/utils"
-	"fmt"
 )
 
 type CryptoRepo struct {
@@ -57,8 +56,7 @@ func (repo *CryptoRepo) GetCryptos() error {
 
 	for rows.Next() {
 		crypto := &Crypto{}
-		err := rows.Scan(&crypto.Id, &crypto.Name, &crypto.Symbol, &crypto.PriceUSD)
-		fmt.Println("select des from crypto where ")
+		err := rows.Scan(&crypto.Id, &crypto.Name, &crypto.Image, &crypto.Symbol, &crypto.PriceUSD)
 		if err != nil {
 			return err
 		}

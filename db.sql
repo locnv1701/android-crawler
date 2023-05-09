@@ -38,3 +38,13 @@ CREATE TABLE public.crypto (
 	updateddate varchar NULL,
 	des varchar NULL
 );
+
+CREATE TABLE public.tokens (
+	device_token varchar NULL,
+);
+
+CREATE TABLE public.crypto_changes (
+	id int4 NULL,
+	"name" varchar NULL,
+	priceusd float8 NULL,
+);

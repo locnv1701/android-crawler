@@ -29,5 +29,6 @@ func init() {
 		CryptosService.Get("/detail", controller.GetDetail)
 
 		CryptosService.Get("/assets", controller.GetAssets)
+		CryptosService.Post("/tokens", controller.SaveDeviceToken)
 	})
 }
