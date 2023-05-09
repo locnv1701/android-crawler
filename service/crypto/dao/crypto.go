@@ -54,13 +54,17 @@ func (repo *CryptoRepo) GetCryptos() error {
 	}
 	defer rows.Close()
 
+	i := 0
 	for rows.Next() {
 		crypto := &Crypto{}
 		err := rows.Scan(&crypto.Id, &crypto.Name, &crypto.Image, &crypto.Symbol, &crypto.PriceUSD)
 		if err != nil {
 			return err
 		}
-		repo.Cryptos = append(repo.Cryptos, *crypto)
+		if i != crypto.Id {
+			repo.Cryptos = append(repo.Cryptos, *crypto)
+		}
+		i = crypto.Id
 	}
 	return nil
 }

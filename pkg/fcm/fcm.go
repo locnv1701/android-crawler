@@ -9,7 +9,7 @@ import (
 	"google.golang.org/api/option"
 )
 
-const CredentialsFileName = "file.json"
+const CredentialsFileName = "login-test-34d0f-firebase-adminsdk-teu7z-8299694c7b.json"
 
 func PublishMessage(messages []*messaging.Message) {
 	opt := option.WithCredentialsFile(CredentialsFileName)

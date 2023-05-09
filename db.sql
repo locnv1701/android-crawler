@@ -40,11 +40,11 @@ CREATE TABLE public.crypto (
 );
 
 CREATE TABLE public.tokens (
-	device_token varchar NULL,
+	device_token varchar NULL
 );
 
 CREATE TABLE public.crypto_changes (
 	id int4 NULL,
 	"name" varchar NULL,
-	priceusd float8 NULL,
+	priceusd float8 NULL
 );

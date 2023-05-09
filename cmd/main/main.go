@@ -42,7 +42,7 @@ func main() {
 	crawler.CallApiCryptorank()
 	// crawler.CrawlAssetByZapper()
 
-	crawler.NotificationCronjob()
+	// crawler.NotificationCronjob()
 
 	sig := make(chan os.Signal, 1)
 	// Notify Any Signal to OS Signal Channel

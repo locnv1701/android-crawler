@@ -14,6 +14,7 @@ require (
 	github.com/segmentio/kafka-go v0.4.33
 	github.com/sirupsen/logrus v1.9.0
 	github.com/spf13/viper v1.12.0
+	golang.org/x/exp v0.0.0-20230425010034-47ecfdc1ba53
 	google.golang.org/api v0.114.0
 	gopkg.in/mgo.v2 v2.0.0-20190816093944-a6b53ec6cb22
 	gopkg.in/robfig/cron.v2 v2.0.0-20150107220207-be2e0b0deed5

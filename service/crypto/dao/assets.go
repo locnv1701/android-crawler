@@ -3,6 +3,8 @@ package dao
 import (
 	"base/pkg/db"
 	"base/pkg/log"
+
+	"golang.org/x/exp/slices"
 )
 
 type Assets struct {
@@ -41,6 +43,7 @@ func (assets *Assets) GetAllAsset() error {
 	}
 	defer rows.Close()
 
+	address := []string{}
 	for rows.Next() {
 		var asset = Asset{
 			Address: &assets.Address,
@@ -50,7 +53,12 @@ func (assets *Assets) GetAllAsset() error {
 		if err != nil {
 			return err
 		}
-		assets.Assets = append(assets.Assets, &asset)
+
+		if !slices.Contains(address, *asset.TokenAddress) {
+			address = append(address, *asset.TokenAddress)
+			assets.Assets = append(assets.Assets, &asset)
+		}
+
 	}
 	return nil
 }

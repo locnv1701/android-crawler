@@ -33,7 +33,6 @@ func GetAssets(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if count == 0 {
-		fmt.Println("new address")
 		assets, err := crawler.CallZapperNewAddress(address)
 		if err != nil {
 			fmt.Println(err)
@@ -64,7 +63,6 @@ func GetAssets(w http.ResponseWriter, r *http.Request) {
 		amountInt.Div(amountInt, divisor)
 
 		// In kết quả
-		fmt.Println(amountInt.String())
 
 		priceInt, err := strconv.ParseFloat(*asset.TokenPriceUSD, 10)
 		if err != nil {
